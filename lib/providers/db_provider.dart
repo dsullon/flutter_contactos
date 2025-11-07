@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:contactos/models/contacto.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -43,4 +44,32 @@ class DbProvider {
       },
     );
   }
+
+  Future<List<Contacto>?> listadoContactos() async {
+    final db = await database;
+    final resultado = await db!.query("contactos");
+
+    return resultado.isNotEmpty
+        ? resultado.map((c) => Contacto.fromMap(c)).toList()
+        : null;
+  }
+
+  Future<int> nuevoContacto(Contacto contacto) async {
+    final db = await database;
+    final resultado = await db!.insert("contactos", contacto.toMap());
+    return resultado;
+  }
+
+  Future<bool> eliminarContacto(int id) async {
+    final db = await database;
+    final resultado = await db!.delete(
+      "contactos",
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return resultado > 0;
+  }
+
+  //TODO: Implementar el método buscarContactoPorId y actualizaContacto
+  //
 }

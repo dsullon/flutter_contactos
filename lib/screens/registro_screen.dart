@@ -1,5 +1,6 @@
-import 'package:contactos/models/contacto.dart';
+import 'package:contactos/providers/contacto_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegistroScreen extends StatefulWidget {
   const RegistroScreen({super.key});
@@ -9,24 +10,6 @@ class RegistroScreen extends StatefulWidget {
 }
 
 class _RegistroScreenState extends State<RegistroScreen> {
-  final List<Contacto> contactos = [
-    Contacto(
-      nombre: "Juan Rojas",
-      telefono: "987654321",
-      email: "jrojas@prueba.test",
-    ),
-    Contacto(
-      nombre: "Rosario Castro",
-      telefono: "998765432",
-      email: "rcastro@prueba.test",
-    ),
-    Contacto(
-      nombre: "Lucía Ramírez",
-      telefono: "999876543",
-      email: "lramirez@prueba.test",
-    ),
-  ];
-
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _telefonoController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -75,24 +58,39 @@ class _RegistroScreenState extends State<RegistroScreen> {
     final nombre = _nombreController.text.trim();
     final telefono = _telefonoController.text.trim();
     final email = _emailController.text.trim();
+    final contactoProvider = Provider.of<ContactoProvider>(
+      context,
+      listen: false,
+    );
 
     if (nombre.isEmpty || telefono.isEmpty || email.isEmpty) return;
-    setState(() {
+
+    contactoProvider.nuevo(nombre, telefono, email);
+
+    /*setState(() {
       contactos.add(Contacto(nombre: nombre, telefono: telefono, email: email));
       _nombreController.clear();
       _telefonoController.clear();
       _emailController.clear();
-    });
+    });*/
   }
 
   void _eliminar(int index) {
-    setState(() {
+    /*setState(() {
       contactos.removeAt(index);
-    });
+    });*/
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ContactoProvider>(context, listen: false).listar();
   }
 
   @override
   Widget build(BuildContext context) {
+    final contactoProvider = Provider.of<ContactoProvider>(context);
+    final contactos = contactoProvider.contactos;
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
