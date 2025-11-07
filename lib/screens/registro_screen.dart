@@ -43,9 +43,24 @@ class _RegistroScreenState extends State<RegistroScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Aquí debe ir el formulario"),
+            TextField(
+              decoration: InputDecoration(labelText: "Nombres"),
+              controller: _nombreController,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: "Teléfono"),
+              controller: _telefonoController,
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              decoration: InputDecoration(labelText: "Email"),
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
+                _agregar();
                 Navigator.pop(context);
               },
               child: Text("Registrar"),
